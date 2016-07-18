@@ -1,31 +1,30 @@
 {
   "name": "sa-debug-viewer",
-   "version": "0.1.0",
-   "description": "SensorsData Analytics Debugger Viewer",
-   "main": "sa-debug.js",
-   "scripts": {
-   },
-   "bin": {
-     "sa-debug": "bin/sa-debug"   
-   },
-   "repository": {
-     "type": "git",
-     "url": "git+https://github.com/timnew/sa-debug-viewer.git"
-   },
-   "keywords": [
-     "sa",
-     "sensorsdata",
-     "debug",
-     "viewer",
-     "log"
-   ],
-   "author": "TimNew",
-   "license": "MIT",
-   "bugs": {
-     "url": "https://github.com/timnew/sa-debug-viewer/issues"
-   },
-   "homepage": "https://github.com/timnew/sa-debug-viewer#readme",
-   "dependencies": {
+  "version": "0.1.1",
+  "description": "SensorsData Analytics Debugger Viewer",
+  "main": "sa-debug.js",
+  "scripts": {},
+  "bin": {
+    "sa-debug": "bin/sa-debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timnew/sa-debug-viewer.git"
+  },
+  "keywords": [
+    "sa",
+    "sensorsdata",
+    "debug",
+    "viewer",
+    "log"
+  ],
+  "author": "TimNew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/timnew/sa-debug-viewer/issues"
+  },
+  "homepage": "https://github.com/timnew/sa-debug-viewer#readme",
+  "dependencies": {
     "babel-core": "^6.5.2",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-es2015-destructuring": "^6.5.0",
