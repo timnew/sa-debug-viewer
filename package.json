@@ -5,6 +5,9 @@
    "main": "sa-debug.js",
    "scripts": {
    },
+   "bin": {
+     "sa-debug": "bin/sa-debug"   
+   },
    "repository": {
      "type": "git",
      "url": "git+https://github.com/timnew/sa-debug-viewer.git"

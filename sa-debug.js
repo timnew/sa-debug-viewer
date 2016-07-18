@@ -1,3 +1,5 @@
+#! /usr/bin/env node --harmony -r babel-register
+
 import Promise from 'bluebird'
 import fetch from 'node-fetch'
 import { Subject } from 'rx'
