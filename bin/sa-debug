@@ -1,4 +1,4 @@
 #! /usr/bin/env node --harmony
 
 require('babel-register')
-require('../sa-debug')
+require('../lib/cli')
