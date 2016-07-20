@@ -2,7 +2,7 @@
   "name": "sa-debug-viewer",
   "version": "0.1.1",
   "description": "SensorsData Analytics Debugger Viewer",
-  "main": "sa-debug.js",
+  "main": "lib/index.js",
   "scripts": {},
   "bin": {
     "sa-debug": "bin/sa-debug"
@@ -16,7 +16,9 @@
     "sensorsdata",
     "debug",
     "viewer",
-    "log"
+    "log",
+    "stream",
+    "rx"
   ],
   "author": "TimNew",
   "license": "MIT",
@@ -25,6 +27,12 @@
   },
   "homepage": "https://github.com/timnew/sa-debug-viewer#readme",
   "dependencies": {
+    "bluebird": "^3.3.1",
+    "node-fetch": "^1.3.3",
+    "rx": "^4.1.0",
+    "yargs": "^4.8.1"
+  },
+  "devDependencies": {
     "babel-core": "^6.5.2",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-es2015-destructuring": "^6.5.0",
@@ -36,12 +44,6 @@
     "babel-plugin-transform-es2015-unicode-regex": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.5.2",
-    "bluebird": "^3.3.1",
-    "node-fetch": "^1.3.3",
-    "rx": "^4.1.0",
-    "yargs": "^4.8.1"
-  },
-  "devDependencies": {
     "babel-eslint": "^6.0.4",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
