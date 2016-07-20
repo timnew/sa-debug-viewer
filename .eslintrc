@@ -20,6 +20,7 @@
     }],
     "eqeqeq": [2, "smart"],
     "max-len": 0,
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
   },
   "env": {
     "node": true
