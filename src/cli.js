@@ -1,10 +1,7 @@
-#! /usr/bin/env node --harmony -r babel-register
-
 import Promise from 'bluebird'
+import yargs from 'yargs'
 
 import DebugEventStream from './DebugEventStream'
-
-import yargs from 'yargs'
 
 const args = yargs.usage('sa-debug [options] <host>')
                   .option('project', {
