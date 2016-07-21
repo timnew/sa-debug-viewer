@@ -1,4 +1,3 @@
-import Promise from 'bluebird'
 import yargs from 'yargs'
 
 import DebugEventStream from './DebugEventStream'
@@ -23,17 +22,26 @@ const args = yargs.usage('sa-debug [options] <host>')
                   .help('help')
                   .argv
 
-
 const [host] = args._
 
-Promise.resolve(new DebugEventStream(host))
-       .then((stream) => stream.register())
-       .then((stream) => stream.start())
-       .then((stream) => (args.project == null ? stream : stream.filter((entry) => entry.project === args.project)))
-       .then((stream) => (args.event == null ? stream : stream.filter((entry) => entry.message.type === 'track' && args.event.includes(entry.message.event))))
-       .then((stream) => (args.event == null ? stream : stream.filter((entry) => args.userId.includes(entry.message.distinct_id))))
-       .then((stream) => stream.subscribe(
-         (data) => console.log('Next: ', data),
-         (err) => console.log('Error: ', err),
-         () => console.log('Completed'),
-       ))
+const stream = new DebugEventStream(host)
+let observable = stream.toObservable()
+
+if (args.project != null) {
+  observable = observable.filter((entry) => entry.project === args.project)
+}
+
+if (args.event != null) {
+  observable = observable.filter((entry) => entry.message.type === 'track' && args.event.includes(entry.message.event))
+}
+
+if (args.event != null) {
+  observable = observable.filter((entry) => args.userId.includes(entry.message.distinct_id))
+}
+
+/* eslint-disable no-console */
+observable.subscribe(
+  (data) => console.info('Next: ', data),
+  (err) => console.error('Error: ', err),
+  () => console.info('Completed'),
+)

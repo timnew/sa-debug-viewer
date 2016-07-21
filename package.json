@@ -2,7 +2,7 @@
   "name": "sa-debug-viewer",
   "version": "0.1.1",
   "description": "SensorsData Analytics Debugger Viewer",
-  "main": "lib/index.js",
+  "main": "lib/DebugEventStream.js",
   "scripts": {},
   "bin": {
     "sa-debug": "bin/sa-debug"
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/timnew/sa-debug-viewer#readme",
   "dependencies": {
-    "bluebird": "^3.4.1",
+    "debug": "^2.2.0",
     "node-fetch": "^1.5.3",
     "rx": "^4.1.0",
     "yargs": "^4.8.1"

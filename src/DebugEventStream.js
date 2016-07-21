@@ -1,90 +1,44 @@
-import fetch from 'node-fetch'
-import { Subject } from 'rx'
+import { Readable } from 'stream'
 
-const ENTRY_REGEXP = /^\[(\w+)\] dry_run: (true|false), valid message:(.*)/
+import { createSession, fetchData, buildUrls } from './queries'
+import createObservable from './rx'
 
-class DebugEventStream extends Subject {
-  constructor(host) {
-    super()
-    console.log(`Connect to ${host}...`)
-    this.registerUrl = `${host}/accessories/debug_data_session_register`
-    this.fetchUrl = `${host}/accessories/debug_data_fetch`
+class DebugEventStream extends Readable {
+  constructor(host, options = {}) {
+    super(Object.assign({ }, options, { objectMode: true }))
+
+    if (host == null) throw new Error('Host is not provided')
+    this._urls = buildUrls(host)
+
+    this._sessionId = options.sessionId
   }
 
-  async register(sessionId = `${Date.now()}`) {
-    this.sessionId = sessionId
+  get urls() { return this._urls }
+  get sessionId() { return this._sessionId }
+  get sessionBound() { return this._sessionId != null }
 
-    const response = await fetch(
-      this.registerUrl,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ session_id: this.sessionId }),
+  async _read() {
+    try {
+      if (!this.sessionBound) {
+        await this.createSession()
       }
-    )
-
-    if (!response.ok) {
-      console.error('Server')
-      throw new Error(`Server error: ${response.status}`)
+      await this.fetchData()
+    } catch (ex) {
+      this.emit('error', ex)
     }
+  }
 
-    const body = await response.json()
-
-    if (!body.ok) {
-      throw new Error(`Response Error: ${body}`)
-    }
-
-    return this
+  async createSession() {
+    this._sessionId = await createSession(this.urls.registerSession, this.sessionId)
   }
 
   async fetchData() {
-    const response = await fetch(
-      this.fetchUrl,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ session_id: this.sessionId }),
-      }
-    )
-
-    if (!response.ok) {
-      this.onError(`Error: ${response.status}`)
-      return setImmediate(::this.fetchData)
-    }
-
-    const serverData = await response.json()
-
-    if (!serverData.ok) {
-      this.onError(serverData)
-      return setImmediate(::this.fetchData)
-    }
-
-    serverData.data.forEach((entry) => this.onNext(this.parseEntry(entry)))
-
-    return setImmediate(::this.fetchData)
+    const entries = await fetchData(this.urls.fetchData, this.sessionId)
+    entries.forEach((entry) => this.push(entry))
   }
 
-  parseEntry(entry) {
-    const matches = ENTRY_REGEXP.exec(entry)
-    return {
-      project: matches[1],
-      dryRun: JSON.parse(matches[2]),
-      message: JSON.parse(matches[3]),
-    }
-  }
-
-  async start() {
-    if (this.sessionId == null) {
-      throw new Error('Session is null')
-    }
-
-    this.fetchData()
-
-    return this
+  toObservable() {
+    return createObservable(this)
   }
 }
 

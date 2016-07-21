@@ -8,15 +8,11 @@
     "indent": [2, 2, {
       "SwitchCase": 1
     }],
-    "no-alert": 0,
-    "no-console": 0,
+    "no-underscore-dangle": 0,
     "no-undef": 1,
     "id-length": 0,
     "no-param-reassign": [2, {
       "props": false
-    }],
-    "new-cap": [2, {
-      "capIsNewExceptions": ["express.Router"]
     }],
     "eqeqeq": [2, "smart"],
     "max-len": 0,
@@ -24,17 +20,5 @@
   },
   "env": {
     "node": true
-  },
-  "globals": {
-    "app": true,
-
-    "appRoot": true,
-    "config": true,
-
-    "redis": true,
-    "appLogger": true,
-    "hopServiceSa": true,
-
-    "moment": true,
   }
 }
