@@ -7,12 +7,79 @@ Sensors Analytics  [![NPM version][npm-image]][npm-url] [![Build Status][ci-imag
 
 Install using [npm][npm-url].
 
-    $ npm install -g sa-debug-viewer
+```
+$ npm install -g sa-debug-viewer
+```
 
-## Usage
+## DebugEventStream
+
+DebugEventStream is a standard readable stream in object mode.
+It connects to SensorsData debug viewer and yield parsed message.
+
+```js
+import DebugMessageStream from 'sa-debug-viewer'
+
+const messageStream = new DebugMessageStream('http://my-project.cloud.sensorsdata.cn')
+messageStream.on('data', (message) => console.log(message))
+```
+
+## Message Object
+
+The following object is the message that yield by `DebugMessageStream`
+
+```json
+{
+  "project": "default",
+  "dryRun": true,
+  "message": {
+    "time": 1469086165353,
+    "properties": {      
+      "$lib_version": "0.0.13",
+      "env": "qa",
+      "page": "home-page",
+      "$lib": "node",
+      "$city": "北京",
+      "$province": "北京",
+      "$country": "中国"
+    },
+    "lib": {
+      "$lib_version": "0.0.13",
+      "$lib": "node",
+      "$lib_method": "code"
+    },
+    "type": "track",
+    "distinct_id": "23451896",
+    "event": "page_view"
+  }
+}
+```
+
+## Rx Observable
+
+`DebugMessageStream` provides `toObservable` method that converts `DebugMessageStream` into a `Rx.Observable`
+
+For more detail, checkout Microsoft's [Rx documentation]
+
+```js
+import DebugMessageStream from 'sa-debug-viewer'
+
+const messageStream = new DebugMessageStream('http://my-project.cloud.sensorsdata.cn')
+messageStream.toObservable()
+             .filter((message) => message.project === 'production')
+             .filter((message) => message.dryRun)
+             .map((message) => message.message)
+             .subscribe(
+               (event) => console.log('Event: ', event),
+               (err) => console.error('Error: ', err),
+               () => console.log('Completed')
+             )
+```
+
+
+## CLI Utility
 
 ```
-sa-debug [options] <host>
+$ sa-debug [options] <host>
 
 Options:
   --project, -p  Project to monitor                                     [string]
@@ -20,7 +87,6 @@ Options:
   --userId, -u   User id                                                 [array]
   --help         Show help                                             [boolean]
 ```
-
 e.g.
 
 Fetch all `click` event from `default` project from  debug viewer of `http://my-project.cloud.sensorsdata.cn`
@@ -47,3 +113,5 @@ MIT
 [depstat-image]: http://img.shields.io/gemnasium/timnew/sa-debug-viewer.svg?style=flat
 
 [Sensors Analytics]: http://sensorsdata.cn/
+[RxJS]: https://github.com/Reactive-Extensions/RxJS
+[Rx documentation]: https://github.com/Reactive-Extensions/RxJS/tree/master/doc
