@@ -2,7 +2,7 @@
   "name": "sa-debug-viewer",
   "version": "0.1.1",
   "description": "SensorsData Analytics Debugger Viewer",
-  "main": "lib/DebugEventStream.js",
+  "main": "lib/DebugMessageStream.js",
   "scripts": {},
   "bin": {
     "sa-debug": "bin/sa-debug"

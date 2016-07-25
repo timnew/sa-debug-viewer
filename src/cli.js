@@ -1,6 +1,6 @@
 import yargs from 'yargs'
 
-import DebugEventStream from './DebugEventStream'
+import DebugMessageStream from './DebugMessageStream'
 
 const args = yargs.usage('sa-debug [options] <host>')
                   .option('project', {
@@ -24,7 +24,7 @@ const args = yargs.usage('sa-debug [options] <host>')
 
 const [host] = args._
 
-const stream = new DebugEventStream(host)
+const stream = new DebugMessageStream(host)
 let observable = stream.toObservable()
 
 if (args.project != null) {
