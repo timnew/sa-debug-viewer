@@ -1,4 +1,4 @@
-Sensors Analytics  [![NPM version][npm-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Dependency Status][depstat-image]][depstat-url]
+sa-debug-viewer [![NPM version][npm-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Dependency Status][depstat-image]][depstat-url]
 ==============================
 
 > This is a command-line debug viwer for [Sensors Analytics] .
@@ -75,6 +75,40 @@ messageStream.toObservable()
              )
 ```
 
+## Used in Tracker Automation Test
+
+Testing tracker is tedious and error prone. Especially to refactoring or other massive code modification, tracker is fragile.
+
+To ensure the tracker works as expected, regression test is necessary. But manually test all the tracker is boring and labor-heavy, so it is a good idea to test them with automated tests.
+
+This library can be useful when doing the tracker automation test.
+
+```js
+import fetch from 'node-fetch'
+import { purchaseApi } from '../apis'
+import DebugMessageStream from 'sa-debug-viewer'
+
+describe('Order API', () => {
+  it('should track event', async () => {
+    const eventPromise = new DebugMessageStream('http://my-project.cloud.sensorsdata.cn')
+                          .toObservable()
+                          .filter((message) => message.project === 'qa') // Filter message from QA environment
+                          .pluck('message') // Expose SA event object
+                          .first((message) => message.event === 'order_created' && message.distinct_id === 'u:12345')
+                          .timeout(500) // Timeout in 500ms
+                          .toPromise()
+
+    await purchaseApi({ user: 'u12345', product: 'p:23232', quantity: 1 }) // Invoke API to trigger remote server
+
+    const trackedEvent = await eventPromise // If timeout, Timeout exception will be thrown here
+
+    expect(trackedEvent).to.have.property('product_id', 'p:23232') // Assert event custom property
+    expect(trackedEvent).to.have.property('quantity', 1)
+  })
+})
+
+
+```
 
 ## CLI Utility
 
